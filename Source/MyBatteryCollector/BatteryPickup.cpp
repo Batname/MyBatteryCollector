@@ -7,6 +7,9 @@
 ABatteryPickup::ABatteryPickup()
 {
 	GetMesh()->SetSimulatePhysics(true);
+
+	// the base powel level of the battery
+	BatteryPower = 150.0f;
 }
 
 void ABatteryPickup::WasCollected_Implementation()
