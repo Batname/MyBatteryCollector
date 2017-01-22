@@ -3,6 +3,7 @@
 #include "MyBatteryCollector.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "MyBatteryCollectorCharacter.h"
+#include "Pickup.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyBatteryCollectorCharacter
@@ -57,6 +58,8 @@ void AMyBatteryCollectorCharacter::SetupPlayerInputComponent(class UInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	InputComponent->BindAction("Collect", IE_Pressed, this, &AMyBatteryCollectorCharacter::CollectPickups);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyBatteryCollectorCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyBatteryCollectorCharacter::MoveRight);
 
@@ -74,6 +77,30 @@ void AMyBatteryCollectorCharacter::SetupPlayerInputComponent(class UInputCompone
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMyBatteryCollectorCharacter::OnResetVR);
+}
+
+void AMyBatteryCollectorCharacter::CollectPickups()
+{
+	// Get all overlaping Actors and store them in an array
+	TArray<AActor*> CollectedActors;
+	CollectionSphere->GetOverlappingActors(CollectedActors);
+
+	// For each Actor we collected
+	for (int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
+	{
+		// cast the actor to APickup
+		APickup* const TestPickup = Cast<APickup>(CollectedActors[iCollected]);
+
+		// If the cast is successful and the pickup is valid and active
+		if (TestPickup && !TestPickup->IsPendingKill() && TestPickup->IsActive())
+		{
+			// call pickup's WasCollected function
+			TestPickup->WasCollected();
+
+			// deactivate the pickup
+			TestPickup->SetActive(false);
+		}
+	}
 }
 
 
