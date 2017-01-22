@@ -10,7 +10,7 @@ class AMyBatteryCollectorGameMode : public AGameModeBase
 
 public:
 	AMyBatteryCollectorGameMode();
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	/** The rate at which the character loses power */
