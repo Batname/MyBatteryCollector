@@ -16,5 +16,8 @@ class MYBATTERYCOLLECTOR_API ABatteryPickup : public APickup
 public:
 	/* set default values */
 	ABatteryPickup();
+
+	/** ovveride WasCollected Function */
+	void WasCollected_Implementation() override;
 	
 };

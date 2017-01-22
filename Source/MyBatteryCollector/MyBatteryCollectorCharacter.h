@@ -15,6 +15,10 @@ class AMyBatteryCollectorCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	/** Colelction sphere */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* CollectionSphere;
 public:
 	AMyBatteryCollectorCharacter();
 
@@ -65,5 +69,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Return CollecitonSphere suboubject */
+	FORCEINLINE class USphereComponent* GetCollectionSphere() const { return CollectionSphere; }
 };
 
