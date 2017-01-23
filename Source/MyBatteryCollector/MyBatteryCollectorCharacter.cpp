@@ -51,6 +51,10 @@ AMyBatteryCollectorCharacter::AMyBatteryCollectorCharacter()
 	// Set base power level
 	InitialPower = 2000.0f;
 	CharacterPower = InitialPower;
+
+	// Set the dependencie of the speed
+	SpeedFactor = 0.75f;
+	BaseSpeed = 10.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -126,7 +130,12 @@ void AMyBatteryCollectorCharacter::CollectPickups()
 
 void AMyBatteryCollectorCharacter::UpdatePower(float PowerChange)
 {
+	// change power
 	CharacterPower += PowerChange;
+	// change speed
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed + SpeedFactor * CharacterPower;
+	// call visualeffect
+	PowerChangeEffect();
 }
 
 void AMyBatteryCollectorCharacter::OnResetVR()

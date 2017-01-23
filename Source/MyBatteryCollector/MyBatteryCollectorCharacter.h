@@ -86,7 +86,17 @@ protected:
 	/** The starting level of power */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power")
 	float InitialPower;
+	
+	/** Multiplier for character speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
+	float SpeedFactor;
 
+	/** Speed of character */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power", Meta = (BlueprintProtected = "true"))
+	float BaseSpeed;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Power")
+	void PowerChangeEffect();
 private:
 	/** current level of power */
 	UPROPERTY(VisibleAnywhere, Category = "Power")
