@@ -30,10 +30,10 @@ public:
 
 	/** Return teh current player state */
 	UFUNCTION(BlueprintPure, Category = "Power")
-	EBatteryPlayState GetCurrentState() const;
+	EBatteryPlayState GetCurrentState() const { return CurrentState; }
 
 	/** Set a new player state */
-	void SetCurrentState(EBatteryPlayState NewState);
+	void SetCurrentState(EBatteryPlayState NewState) { CurrentState = NewState; }
 
 protected:
 	/** The rate at which the character loses power */
@@ -55,7 +55,7 @@ protected:
 private:
 	/** Keeps track ot the current state */
 	EBatteryPlayState CurrentState;
+
+	/** Collect all actors in array */
+	TArray<class ASpawnVolume*> SpawnVolumeActors;
 };
-
-
-
