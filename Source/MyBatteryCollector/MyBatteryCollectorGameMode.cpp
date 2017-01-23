@@ -29,10 +29,19 @@ void AMyBatteryCollectorGameMode::Tick(float DeltaSeconds)
 	AMyBatteryCollectorCharacter* MyCharacter = Cast<AMyBatteryCollectorCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (MyCharacter)
 	{
-		if (MyCharacter->GetCurrentPower() > 0)
+		// if power is grather then needed set to win
+		if (MyCharacter->GetCurrentPower() > PowerToWin)
+		{
+			SetCurrentState(EBatteryPlayState::EWon);
+		}
+		else if (MyCharacter->GetCurrentPower() > 0)
 		{
 			// Decrease power
 			MyCharacter->UpdatePower(-DeltaSeconds * DecayRate * (MyCharacter->GetInitialPower()));
+		}
+		else
+		{
+			SetCurrentState(EBatteryPlayState::EGameOver);
 		}
 	}
 }
@@ -40,6 +49,7 @@ void AMyBatteryCollectorGameMode::Tick(float DeltaSeconds)
 void AMyBatteryCollectorGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	SetCurrentState(EBatteryPlayState::EPlaying);
 
 	// set the game score to beat
 	AMyBatteryCollectorCharacter* MyCharacter = Cast<AMyBatteryCollectorCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
@@ -56,4 +66,9 @@ void AMyBatteryCollectorGameMode::BeginPlay()
 			CurrentWidget->AddToViewport();
 		}
 	}
+}
+
+void AMyBatteryCollectorGameMode::SetCurrentState(EBatteryPlayState NewState)
+{
+	CurrentState = NewState;
 }
