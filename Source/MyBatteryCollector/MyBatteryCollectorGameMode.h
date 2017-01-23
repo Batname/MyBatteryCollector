@@ -30,7 +30,7 @@ public:
 
 	/** Return teh current player state */
 	UFUNCTION(BlueprintPure, Category = "Power")
-	EBatteryPlayState GetCurrentState() const { return CurrentState; }
+	EBatteryPlayState GetCurrentState() const;
 
 	/** Set a new player state */
 	void SetCurrentState(EBatteryPlayState NewState);

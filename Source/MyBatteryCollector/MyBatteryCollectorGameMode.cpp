@@ -68,6 +68,11 @@ void AMyBatteryCollectorGameMode::BeginPlay()
 	}
 }
 
+EBatteryPlayState AMyBatteryCollectorGameMode::GetCurrentState() const
+{
+	return CurrentState;
+}
+
 void AMyBatteryCollectorGameMode::SetCurrentState(EBatteryPlayState NewState)
 {
 	CurrentState = NewState;
