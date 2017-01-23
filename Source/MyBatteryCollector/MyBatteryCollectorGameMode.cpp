@@ -4,6 +4,7 @@
 #include "MyBatteryCollectorGameMode.h"
 #include "MyBatteryCollectorCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 AMyBatteryCollectorGameMode::AMyBatteryCollectorGameMode()
 {
@@ -32,6 +33,27 @@ void AMyBatteryCollectorGameMode::Tick(float DeltaSeconds)
 		{
 			// Decrease power
 			MyCharacter->UpdatePower(-DeltaSeconds * DecayRate * (MyCharacter->GetInitialPower()));
+		}
+	}
+}
+
+void AMyBatteryCollectorGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// set the game score to beat
+	AMyBatteryCollectorCharacter* MyCharacter = Cast<AMyBatteryCollectorCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (MyCharacter)
+	{
+		PowerToWin = (MyCharacter->GetInitialPower()) * 1.25f;
+	}
+
+	if (HUDWidgetClass != nullptr)
+	{
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+		if (CurrentWidget != nullptr)
+		{
+			CurrentWidget->AddToViewport();
 		}
 	}
 }

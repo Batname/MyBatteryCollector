@@ -3,6 +3,6 @@
 #ifndef __MYBATTERYCOLLECTOR_H__
 #define __MYBATTERYCOLLECTOR_H__
 
-#include "EngineMinimal.h"
+#include "Engine.h"
 
 #endif
