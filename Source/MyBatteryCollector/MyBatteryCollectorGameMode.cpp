@@ -15,7 +15,7 @@ AMyBatteryCollectorGameMode::AMyBatteryCollectorGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+	} 
 
 	// base decay rate
 	DecayRate = 0.01f;
