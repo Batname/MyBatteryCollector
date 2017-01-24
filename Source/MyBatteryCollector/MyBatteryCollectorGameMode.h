@@ -33,7 +33,7 @@ public:
 	EBatteryPlayState GetCurrentState() const { return CurrentState; }
 
 	/** Set a new player state */
-	void SetCurrentState(EBatteryPlayState NewState) { CurrentState = NewState; }
+	void SetCurrentState(EBatteryPlayState NewState);
 
 protected:
 	/** The rate at which the character loses power */
@@ -58,4 +58,7 @@ private:
 
 	/** Collect all actors in array */
 	TArray<class ASpawnVolume*> SpawnVolumeActors;
+
+	/** Handle any function that rely upon changing the playing */
+	void HandleNewState(EBatteryPlayState NewState);
 };

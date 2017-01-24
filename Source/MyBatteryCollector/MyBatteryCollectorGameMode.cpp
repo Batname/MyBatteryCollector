@@ -50,6 +50,20 @@ void AMyBatteryCollectorGameMode::Tick(float DeltaSeconds)
 void AMyBatteryCollectorGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// find all spawn volume Actors
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundActors);
+
+	for (auto Actor : FoundActors)
+	{
+		ASpawnVolume* SpawnVolumeActor = Cast<ASpawnVolume>(Actor);
+		if (SpawnVolumeActor)
+		{
+			SpawnVolumeActors.AddUnique(SpawnVolumeActor);
+		}
+	}
+
 	SetCurrentState(EBatteryPlayState::EPlaying);
 
 	// set the game score to beat
@@ -67,17 +81,66 @@ void AMyBatteryCollectorGameMode::BeginPlay()
 			CurrentWidget->AddToViewport();
 		}
 	}
+}
 
-	// find all spawn volume Actors
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawnVolume::StaticClass(), FoundActors);
+void AMyBatteryCollectorGameMode::SetCurrentState(EBatteryPlayState NewState)
+{
+	// Set current state
+	CurrentState = NewState;
 
-	for (auto Actor : FoundActors)
+	// Handle new state
+	HandleNewState(CurrentState);
+}
+
+void AMyBatteryCollectorGameMode::HandleNewState(EBatteryPlayState NewState)
+{
+	switch(NewState)
 	{
-		ASpawnVolume* SpawnVolumeActor = Cast<ASpawnVolume>(Actor);
-		if (SpawnVolumeActor)
+		case EBatteryPlayState::EPlaying:
 		{
-			SpawnVolumeActors.AddUnique(SpawnVolumeActor);
+			// spawn volumes active
+			for (ASpawnVolume* Volume : SpawnVolumeActors)
+			{
+				Volume->SetSpawningActive(true);
+			}
 		}
+		break;
+		case EBatteryPlayState::EWon:
+		{
+			// spawn volumes inactive
+			for (ASpawnVolume* Volume : SpawnVolumeActors)
+			{
+				Volume->SetSpawningActive(false);
+			}
+		}
+		break;
+		case EBatteryPlayState::EGameOver:
+		{
+			// spawn volumes inactive
+			for (ASpawnVolume* Volume : SpawnVolumeActors)
+			{
+				Volume->SetSpawningActive(false);
+			}
+			// block player input
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+			if (PlayerController)
+			{
+				PlayerController->SetCinematicMode(true, false, false, true, true);
+			}
+			// ragdoll the character
+			ACharacter* MyCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+			if (MyCharacter)
+			{
+				MyCharacter->GetMesh()->SetSimulatePhysics(true);
+				MyCharacter->GetMovementComponent()->MovementState.bCanJump = false;
+			}
+		}
+		break;
+		default:
+		case EBatteryPlayState::EUnknown:
+		{
+			// do nothing
+		}
+		break;
 	}
 }
